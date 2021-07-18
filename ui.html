@@ -272,7 +272,7 @@
 <div class="justify-end mb-0" id="toggle">
   <p>Close plugin on completion</p>
   <label class="switch">
-    <input type="checkbox" id="checkbox" />
+    <input type="checkbox" id="checkbox" checked />
     <span class="slider round"></span>
   </label>
 </div>
@@ -286,12 +286,6 @@
     checkboxOn = checkbox.hasAttribute("checked");
   };
 
-  // onmessage = (event) => {
-  //   if (event.data.pluginMessage.selection) {
-  //     console.log(event.data.pluginMessage.selection);
-  //   }
-  // };
-
   fetch(
     "https://api.cosmicjs.com/v2/buckets/kemiljk/objects?pretty=true&query=%7B%22type%22%3A%22blogs%22%7D&read_key=uNXYQDbNTCWQyEaFjq44PUolieGKBuzePTaEdnDl0CHLcnJtPK&limit=20&status=any&props=slug,title,content,metadata&sort=-created_at"
   )
@@ -299,22 +293,21 @@
     .then((data) => {
       for (let i = 0; i < data.objects.length; i++) {
         const blog = data.objects[i];
+        const placeholder = "https://via.placeholder.com/200x100";
         blog.loading = "lazy";
-        const blogItems = document.querySelector("#blogList");
+        const blogItemsRow = document.querySelector("#blogList");
         const blogListItem = document.createElement("SPAN");
         const listWrapper = document.createElement("DIV");
         const image = document.createElement("IMG");
-        // const button = document.createElement("BUTTON");
-        // button.setAttribute("class", "primary");
-        // button.textContent = "Update";
-        // button.id += "updateBlog" + "-" + [i];
         blogListItem.textContent = blog.title;
         blogListItem.setAttribute("class", "list");
         listWrapper.setAttribute("class", "listWrapper");
         listWrapper.id += "blog" + "-" + [i];
-        image.src = blog.metadata.hero.imgix_url;
+        image.src = blog.metadata.hero
+          ? blog.metadata.hero.imgix_url
+          : placeholder;
         listWrapper.append(image, blogListItem);
-        blogItems.append(listWrapper);
+        blogItemsRow.append(listWrapper);
 
         const titleText = blog.title;
         document.querySelector("#blog" + "-" + [i]).onclick = () => {
@@ -323,9 +316,6 @@
             "*"
           );
         };
-        // document.querySelector("#updateBlog" + "-" + [i]).onclick = () => {
-        //   parent.postMessage({ pluginMessage: { type: "update-meta" } }, "*");
-        // };
       }
     });
 </script>

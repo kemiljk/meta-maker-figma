@@ -8,11 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 figma.showUI(__html__, { width: 400, height: 400 });
+const nodes = [];
+const { selection } = figma.currentPage;
 figma.ui.onmessage = (msg) => {
     if (msg.type === "new-title") {
         const CREATE_META = () => __awaiter(this, void 0, void 0, function* () {
-            const nodes = [];
-            const { selection } = figma.currentPage;
             yield figma.loadFontAsync({ family: "Inter", style: "Bold" });
             const settings = [{ format: "PNG", suffix: "@2x" }];
             if (selection.length === 1 && selection[0].type === "FRAME") {
@@ -68,19 +68,6 @@ figma.ui.onmessage = (msg) => {
         });
         CREATE_META();
     }
-    // if (msg.type === "update-meta") {
-    //   const { selection } = figma.currentPage;
-    //   const settings = [{ format: "SVG", suffix: "" }];
-    //   // const metaTitle = msg.titleText;
-    //   const frameName = figma.currentPage.selection[0].name;
-    //   async function main(nodes) {
-    //     for (let node of nodes) {
-    //       node.exportSettings = settings;
-    //     }
-    //   }
-    //   main(selection);
-    //   figma.ui.postMessage({ selection: frameName });
-    // }
     if (msg.checkboxOn === true) {
         figma.closePlugin();
     }
