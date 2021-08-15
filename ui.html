@@ -272,7 +272,7 @@
 <div class="justify-end mb-0" id="toggle">
   <p>Close plugin on completion</p>
   <label class="switch">
-    <input type="checkbox" id="checkbox" checked />
+    <input type="checkbox" id="checkbox" />
     <span class="slider round"></span>
   </label>
 </div>
@@ -303,7 +303,7 @@
         blogListItem.setAttribute("class", "list");
         listWrapper.setAttribute("class", "listWrapper");
         listWrapper.id += "blog" + "-" + [i];
-        image.src = blog.metadata.hero
+        image.src = blog.metadata.hero.imgix_url
           ? blog.metadata.hero.imgix_url
           : placeholder;
         listWrapper.append(image, blogListItem);

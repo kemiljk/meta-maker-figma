@@ -4,22 +4,10 @@ const { selection } = figma.currentPage;
 
 figma.ui.onmessage = (msg) => {
   if (msg.type === "new-title") {
-    const CREATE_META = async () => {
-      await figma.loadFontAsync({ family: "Inter", style: "Bold" });
+    if (figma.currentPage.selection.length === 0) {
       const settings = [{ format: "PNG", suffix: "@2x" }];
-      if (selection.length === 1 && selection[0].type === "FRAME") {
-        const selectedFrame = figma.currentPage.selection[0] as FrameNode;
-        const selectedFrameText = selectedFrame.children[0] as TextNode;
-        selectedFrame.fills = [
-          {
-            type: "SOLID",
-            color: { r: Math.random(), g: Math.random(), b: Math.random() },
-          },
-        ];
-        selectedFrame.name = msg.titleText;
-        selectedFrameText.characters = msg.titleText;
-        selectedFrameText.name = msg.titleText;
-      } else if (selection.length === 0) {
+      const CREATE_META = async () => {
+        await figma.loadFontAsync({ family: "Inter", style: "Bold" });
         const frame = figma.createFrame();
         const title = figma.createText();
         title.fontName = { family: "Inter", style: "Bold" };
@@ -53,16 +41,34 @@ figma.ui.onmessage = (msg) => {
         nodes.push(frame);
         figma.currentPage.selection = nodes;
         figma.viewport.scrollAndZoomIntoView(nodes);
-      }
+        function main(frames) {
+          frames.forEach((node) => {
+            node.exportSettings = settings;
+          });
+        }
+        main(nodes);
+      };
 
-      function main(nodes) {
-        nodes.forEach((node) => {
-          node.exportSettings = settings;
-        });
-      }
-      main(nodes);
-    };
-    CREATE_META();
+      CREATE_META();
+    }
+
+    if (figma.currentPage.selection.length === 1) {
+      const UPDATE_META = async () => {
+        await figma.loadFontAsync({ family: "Inter", style: "Bold" });
+        const selectedFrame = figma.currentPage.selection[0] as FrameNode;
+        const selectedFrameText = selectedFrame.children[0] as TextNode;
+        selectedFrame.fills = [
+          {
+            type: "SOLID",
+            color: { r: Math.random(), g: Math.random(), b: Math.random() },
+          },
+        ];
+        selectedFrame.name = msg.titleText;
+        selectedFrameText.characters = msg.titleText;
+        selectedFrameText.name = msg.titleText;
+      };
+      UPDATE_META();
+    }
   }
 
   if (msg.checkboxOn === true) {
